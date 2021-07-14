@@ -1,0 +1,1 @@
+frame-one-bucket-adapter
