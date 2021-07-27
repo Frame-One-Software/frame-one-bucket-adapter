@@ -1,0 +1,9 @@
+.idea
+.github
+node_modules
+src
+README.md
+docker-compose.yml
+package-lock.json
+**/*.tgz
+package

@@ -1,0 +1,25 @@
+{
+  "name": "frame-one-bucket-adapter",
+  "version": "1.0.0",
+  "description": "An adapter for wrapping various storage buckets and unifying a select number of features.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "5.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frame-One-Software/frame-one-bucket-adapter.git"
+  },
+  "author": "Frame One Software Inc.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Frame-One-Software/frame-one-bucket-adapter/issues"
+  },
+  "homepage": "https://github.com/Frame-One-Software/frame-one-bucket-adapter#readme",
+  "devDependencies": {
+    "typescript": "4.3.5"
+  }
+}
