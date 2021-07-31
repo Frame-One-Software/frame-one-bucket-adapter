@@ -1,3 +1,3 @@
-export * from "./BucketAdapter";
-export * from "./adapters/GoogleStorageBucketAdapter";
-export * from "./adapters/S3BucketAdapter";
+export * from "./bucket/BucketAdapter";
+export * from "./bucket/GoogleStorageBucketAdapter";
+export * from "./bucket/S3BucketAdapter";

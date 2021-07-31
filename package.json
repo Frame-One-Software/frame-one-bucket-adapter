@@ -7,7 +7,9 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@google-cloud/storage": "5.1.2"
+    "@google-cloud/storage": "5.1.2",
+    "@types/node": "^16.4.8",
+    "axios": "^0.21.1"
   },
   "repository": {
     "type": "git",

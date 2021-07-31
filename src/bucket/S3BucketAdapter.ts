@@ -1,4 +1,4 @@
-import {BucketAdapter} from "../BucketAdapter";
+import {BucketAdapter} from "./BucketAdapter";
 
 class S3BucketAdapter extends BucketAdapter<any> {
 
