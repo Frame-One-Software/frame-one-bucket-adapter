@@ -9,7 +9,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "lib": ["es5", "es2018"],
-    "outDir": "dist"
+    "outDir": "dist",
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",
