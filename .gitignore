@@ -26,3 +26,5 @@ yarn-error.log*
 build
 **/*.tgz
 package
+
+.localstack
