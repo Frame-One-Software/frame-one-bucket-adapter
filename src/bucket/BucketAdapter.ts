@@ -1,37 +1,53 @@
-import {FileAdapter} from "../file/FileAdapter";
+import {Readable} from "stream";
 
-interface IBucketAdapterConstructor<NativeBucket> {
-    nativeBucket: NativeBucket;
+interface IBucketAdapterConstructor {
+    bucketName: string;
+}
+
+interface ICreateReadStreamOptions {
+
+}
+
+interface IGetBase64Options {
+
+}
+
+interface IGetSignedURLOptions {
+    expires: number;
 }
 
 interface IUploadOptions {
-
+    fileName: string;
 }
 
-interface IFileOptions {
+abstract class BucketAdapter {
 
-}
+    private readonly _bucketName: string;
 
-abstract class BucketAdapter<NativeBucket, NativeFile> {
-
-    protected readonly nativeBucket: NativeBucket;
-
-    constructor(args: IBucketAdapterConstructor<NativeBucket>) {
-        this.nativeBucket = args.nativeBucket;
+    constructor(args: IBucketAdapterConstructor) {
+        this._bucketName = args.bucketName;
     }
 
-    public getNativeBucket(): NativeBucket {
-        return this.nativeBucket;
+    public get bucketName(): string {
+        return this._bucketName;
     }
+
+    public abstract createReadStream(name: string, options: ICreateReadStreamOptions): Promise<Readable>;
+
+    public abstract exists(name: string): Promise<boolean>;
+
+    public abstract getBase64(name: string, options: IGetBase64Options): Promise<string>;
+
+    public abstract getSignedURL(name: string, options: IGetSignedURLOptions): Promise<string>;
 
     public abstract upload(filePath: string, options: IUploadOptions): Promise<void>;
-
-    public abstract file(name: string, options: IFileOptions): Promise<FileAdapter<NativeFile>>;
 }
 
 export {
     IBucketAdapterConstructor,
+    ICreateReadStreamOptions,
+    IGetBase64Options,
+    IGetSignedURLOptions,
     IUploadOptions,
-    IFileOptions,
     BucketAdapter
 };
