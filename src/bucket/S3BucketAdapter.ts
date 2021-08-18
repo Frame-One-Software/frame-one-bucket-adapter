@@ -127,11 +127,19 @@ class S3BucketAdapter extends BucketAdapter {
         })
     }
 
-    async upload(filePath: string, options: IUploadOptions): Promise<void> {
+    async upload(filePathOrData: string | Buffer, options: IUploadOptions): Promise<void> {
+        // if given filePath read the file
+        let data: Buffer;
+        if (typeof filePathOrData === "string") {
+            data = await fs.readFile(filePathOrData);
+        } else {
+            data = filePathOrData;
+        }
+
         const params: PutObjectRequest = {
             Bucket: this.bucketName,
             Key: options.fileName,
-            Body: await fs.readFile(filePath),
+            Body: data,
         }
 
         return new Promise((resolve, reject) => {

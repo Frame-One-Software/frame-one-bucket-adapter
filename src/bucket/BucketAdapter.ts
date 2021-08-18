@@ -41,6 +41,7 @@ abstract class BucketAdapter {
     public abstract getSignedURL(name: string, options: IGetSignedURLOptions): Promise<string>;
 
     public abstract upload(filePath: string, options: IUploadOptions): Promise<void>;
+    public abstract upload(data: Buffer, options: IUploadOptions): Promise<void>;
 }
 
 export {

@@ -94,8 +94,15 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 		return signedURL;
 	}
 
-	async upload(filePath: string, options: IGoogleStorageUploadOptions): Promise<void> {
-		await this._googleBucket.upload(filePath, options);
+	async upload(filePathOrBuffer: string | Buffer, options: IGoogleStorageUploadOptions): Promise<void> {
+		// given filePath
+		if (typeof filePathOrBuffer === "string") {
+			await this._googleBucket.upload(filePathOrBuffer, options);
+		} else {
+			await this._googleBucket
+			    .file(options.fileName)
+			    .save(filePathOrBuffer, {gzip: options.gzip, contentType: options.mimetype});
+		}
 	}
 }
 
