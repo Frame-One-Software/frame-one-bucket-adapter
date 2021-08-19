@@ -142,6 +142,8 @@ class S3BucketAdapter extends BucketAdapter {
             Body: data,
         }
 
+        console.log({params});
+
         return new Promise((resolve, reject) => {
             this.s3.upload(params, (err) => {
                 if (err) {
