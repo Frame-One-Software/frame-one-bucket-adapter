@@ -18,6 +18,7 @@ interface IGetSignedURLOptions {
 
 interface IUploadOptions {
     fileName: string;
+    contentType: string;
 }
 
 abstract class BucketAdapter {

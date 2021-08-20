@@ -139,10 +139,9 @@ class S3BucketAdapter extends BucketAdapter {
         const params: PutObjectRequest = {
             Bucket: this.bucketName,
             Key: options.fileName,
+            ContentType: options.contentType,
             Body: data,
         }
-
-        console.log({params});
 
         return new Promise((resolve, reject) => {
             this.s3.upload(params, (err) => {
@@ -151,8 +150,8 @@ class S3BucketAdapter extends BucketAdapter {
                 } else {
                     resolve();
                 }
-            })
-        })
+            });
+        });
     }
 }
 

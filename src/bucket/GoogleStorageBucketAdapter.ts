@@ -24,7 +24,6 @@ interface IGoogleStorageGetSignedURLOptions extends IGetSignedURLOptions {
 }
 
 interface IGoogleStorageUploadOptions extends IUploadOptions {
-	mimetype: string;
 	gzip: boolean;
 }
 
@@ -97,11 +96,22 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 	async upload(filePathOrBuffer: string | Buffer, options: IGoogleStorageUploadOptions): Promise<void> {
 		// given filePath
 		if (typeof filePathOrBuffer === "string") {
-			await this._googleBucket.upload(filePathOrBuffer, options);
+			const uploadOptions = {
+				destination: options.fileName,
+				contentType: options.contentType,
+				gzip: options.gzip
+			}
+
+			await this._googleBucket.upload(filePathOrBuffer, uploadOptions);
 		} else {
+			const uploadOptions = {
+				contentType: options.contentType,
+				gzip: options.gzip
+			}
+
 			await this._googleBucket
 			    .file(options.fileName)
-			    .save(filePathOrBuffer, {gzip: options.gzip, contentType: options.mimetype});
+			    .save(filePathOrBuffer, uploadOptions);
 		}
 	}
 }
