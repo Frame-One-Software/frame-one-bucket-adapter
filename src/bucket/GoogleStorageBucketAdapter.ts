@@ -94,7 +94,7 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 			expires: Date.now() + options.expires,
 			virtualHostedStyle: options.virtualHostedStyle
 		});
-		
+
 		return signedURL;
 	}
 
