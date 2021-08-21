@@ -1,9 +1,10 @@
 import {
     BucketAdapter,
-    IBucketAdapterConstructor,
-    ICreateReadStreamOptions,
-    IGetBase64Options, IGetSignedURLOptions,
-    IUploadOptions
+    BucketAdapterConstructor,
+    CreateReadStreamOptions,
+    GetBase64Options,
+    GetSignedURLOptions,
+    UploadOptions
 } from "./BucketAdapter";
 import S3, {PutObjectRequest} from "aws-sdk/clients/s3";
 import {Readable} from "stream";
@@ -11,23 +12,23 @@ import * as fs from "fs-extra";
 import axios from "axios";
 import {AWSError} from "aws-sdk";
 
-interface IS3BucketAdapterConstructor extends IBucketAdapterConstructor {
+interface IS3BucketAdapterConstructor extends BucketAdapterConstructor {
     s3: S3;
 }
 
-interface IS3CreateReadStreamOptions extends ICreateReadStreamOptions {
+interface IS3CreateReadStreamOptions extends CreateReadStreamOptions {
 
 }
 
-interface IS3GetBase64Options extends IGetBase64Options {
+interface IS3GetBase64Options extends GetBase64Options {
 
 }
 
-interface IS3GetSignedURLOptions extends IGetSignedURLOptions {
+interface IS3GetSignedURLOptions extends GetSignedURLOptions {
 
 }
 
-interface IS3UploadOptions extends IUploadOptions {
+interface IS3UploadOptions extends UploadOptions {
 
 }
 
@@ -43,7 +44,7 @@ class S3BucketAdapter extends BucketAdapter {
         return this._s3;
     }
 
-    async createReadStream(name: string, options: ICreateReadStreamOptions): Promise<Readable> {
+    async createReadStream(name: string, options?: CreateReadStreamOptions): Promise<Readable> {
         // check that the file exists
         const exists = await this.exists(name);
         if (!exists) {
@@ -58,7 +59,7 @@ class S3BucketAdapter extends BucketAdapter {
         return this.s3.getObject(params).createReadStream();
     }
 
-    exists(name: string): Promise<boolean> {
+    async exists(name: string): Promise<boolean> {
         const params: S3.Types.HeadObjectRequest = {
             Bucket: this.bucketName,
             Key: name,
@@ -79,7 +80,13 @@ class S3BucketAdapter extends BucketAdapter {
         })
     }
 
-    async getBase64(name: string, options: IGetBase64Options): Promise<string> {
+    async getBase64(name: string, options?: GetBase64Options): Promise<string> {
+        // check that the file exists
+        const exists = await this.exists(name);
+        if (!exists) {
+            throw new Error("Could not find the file.");
+        }
+
         const params: S3.Types.HeadObjectRequest = {
             Bucket: this.bucketName,
             Key: name
@@ -109,7 +116,15 @@ class S3BucketAdapter extends BucketAdapter {
             + Buffer.from(response.data, 'binary').toString('base64');
     }
 
-    getSignedURL(name: string, options: IGetSignedURLOptions): Promise<string> {
+    async getSignedURL(name: string, options: GetSignedURLOptions): Promise<string> {
+        // check that the file exists
+        const exists = await this.exists(name);
+        if (!exists) {
+            throw new Error("Could not find the file.");
+        }
+
+        // Expires option must be in seconds
+        const Expires = Math.floor(options.expires / 1000);
         const params = {
             Bucket: this.bucketName,
             Key: name,
@@ -127,7 +142,7 @@ class S3BucketAdapter extends BucketAdapter {
         })
     }
 
-    async upload(filePathOrData: string | Buffer, options: IUploadOptions): Promise<void> {
+    async upload(filePathOrData: string | Buffer, options: UploadOptions): Promise<void> {
         // if given filePath read the file
         let data: Buffer;
         if (typeof filePathOrData === "string") {

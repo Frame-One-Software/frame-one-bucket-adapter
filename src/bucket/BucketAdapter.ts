@@ -1,22 +1,22 @@
 import {Readable} from "stream";
 
-interface IBucketAdapterConstructor {
+interface BucketAdapterConstructor {
     bucketName: string;
 }
 
-interface ICreateReadStreamOptions {
+interface CreateReadStreamOptions {
 
 }
 
-interface IGetBase64Options {
+interface GetBase64Options {
 
 }
 
-interface IGetSignedURLOptions {
+interface GetSignedURLOptions {
     expires: number;
 }
 
-interface IUploadOptions {
+interface UploadOptions {
     fileName: string;
     contentType: string;
 }
@@ -25,7 +25,7 @@ abstract class BucketAdapter {
 
     private readonly _bucketName: string;
 
-    constructor(args: IBucketAdapterConstructor) {
+    constructor(args: BucketAdapterConstructor) {
         this._bucketName = args.bucketName;
     }
 
@@ -33,23 +33,23 @@ abstract class BucketAdapter {
         return this._bucketName;
     }
 
-    public abstract createReadStream(name: string, options: ICreateReadStreamOptions): Promise<Readable>;
+    public abstract createReadStream(name: string, options?: CreateReadStreamOptions): Promise<Readable>;
 
     public abstract exists(name: string): Promise<boolean>;
 
-    public abstract getBase64(name: string, options: IGetBase64Options): Promise<string>;
+    public abstract getBase64(name: string, options?: GetBase64Options): Promise<string>;
 
-    public abstract getSignedURL(name: string, options: IGetSignedURLOptions): Promise<string>;
+    public abstract getSignedURL(name: string, options: GetSignedURLOptions): Promise<string>;
 
-    public abstract upload(filePath: string, options: IUploadOptions): Promise<void>;
-    public abstract upload(data: Buffer, options: IUploadOptions): Promise<void>;
+    public abstract upload(filePath: string, options: UploadOptions): Promise<void>;
+    public abstract upload(data: Buffer, options: UploadOptions): Promise<void>;
 }
 
 export {
-    IBucketAdapterConstructor,
-    ICreateReadStreamOptions,
-    IGetBase64Options,
-    IGetSignedURLOptions,
-    IUploadOptions,
+    BucketAdapterConstructor,
+    CreateReadStreamOptions,
+    GetBase64Options,
+    GetSignedURLOptions,
+    UploadOptions,
     BucketAdapter
 };

@@ -1,36 +1,36 @@
 import {
 	BucketAdapter,
-	IBucketAdapterConstructor,
-	ICreateReadStreamOptions,
-	IGetSignedURLOptions,
-	IUploadOptions
+	BucketAdapterConstructor,
+	CreateReadStreamOptions,
+	GetSignedURLOptions,
+	UploadOptions
 } from "./BucketAdapter";
 import {Bucket as GoogleStorageBucket, Storage} from "@google-cloud/storage";
 import {Readable} from "stream";
-import {CreateReadStreamOptions, GetSignedUrlConfig} from "@google-cloud/storage/build/src/file";
+import {CreateReadStreamOptions as NativeCreateReadStreamOptions, GetSignedUrlConfig} from "@google-cloud/storage/build/src/file";
 import axios from "axios";
 
-interface IGoogleStorageBucketAdapterConstructor extends IBucketAdapterConstructor {
+interface GoogleStorageBucketAdapterConstructor extends BucketAdapterConstructor {
 	storage: Storage;
 }
 
-interface IGoogleStorageCreateReadStreamOptions extends ICreateReadStreamOptions {
-	validation?: CreateReadStreamOptions["validation"];
+interface GoogleStorageCreateReadStreamOptions extends CreateReadStreamOptions {
+	validation?: NativeCreateReadStreamOptions["validation"];
 }
 
-interface IGoogleStorageGetSignedURLOptions extends IGetSignedURLOptions {
+interface GoogleStorageGetSignedURLOptions extends GetSignedURLOptions {
 	action: GetSignedUrlConfig["action"];
 	virtualHostedStyle?: GetSignedUrlConfig["virtualHostedStyle"];
 }
 
-interface IGoogleStorageUploadOptions extends IUploadOptions {
+interface GoogleStorageUploadOptions extends UploadOptions {
 	gzip: boolean;
 }
 
 class GoogleStorageBucketAdapter extends BucketAdapter {
 	private readonly _googleBucket: GoogleStorageBucket;
 
-	constructor(args: IGoogleStorageBucketAdapterConstructor) {
+	constructor(args: GoogleStorageBucketAdapterConstructor) {
 		super(args);
 		this._googleBucket = args.storage.bucket(args.bucketName);
 	}
@@ -39,7 +39,7 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 		return this._googleBucket
 	}
 
-	async createReadStream(name: string, options: IGoogleStorageCreateReadStreamOptions): Promise<Readable> {
+	async createReadStream(name: string, options: GoogleStorageCreateReadStreamOptions): Promise<Readable> {
 		// find the file
 		const file = this._googleBucket.file(name);
 
@@ -80,7 +80,7 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 			+ Buffer.from(response.data, 'binary').toString('base64');
 	}
 
-	async getSignedURL(name: string, options: IGoogleStorageGetSignedURLOptions): Promise<string> {
+	async getSignedURL(name: string, options: GoogleStorageGetSignedURLOptions): Promise<string> {
 		// find the file
 		const file = this._googleBucket.file(name);
 
@@ -93,7 +93,7 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 		return signedURL;
 	}
 
-	async upload(filePathOrBuffer: string | Buffer, options: IGoogleStorageUploadOptions): Promise<void> {
+	async upload(filePathOrBuffer: string | Buffer, options: GoogleStorageUploadOptions): Promise<void> {
 		// given filePath
 		if (typeof filePathOrBuffer === "string") {
 			const uploadOptions = {
