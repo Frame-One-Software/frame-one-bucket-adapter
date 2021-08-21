@@ -12,30 +12,30 @@ import * as fs from "fs-extra";
 import axios from "axios";
 import {AWSError} from "aws-sdk";
 
-interface IS3BucketAdapterConstructor extends BucketAdapterConstructor {
+interface S3BucketAdapterConstructor extends BucketAdapterConstructor {
     s3: S3;
 }
 
-interface IS3CreateReadStreamOptions extends CreateReadStreamOptions {
+interface S3CreateReadStreamOptions extends CreateReadStreamOptions {
 
 }
 
-interface IS3GetBase64Options extends GetBase64Options {
+interface S3GetBase64Options extends GetBase64Options {
 
 }
 
-interface IS3GetSignedURLOptions extends GetSignedURLOptions {
+interface S3GetSignedURLOptions extends GetSignedURLOptions {
 
 }
 
-interface IS3UploadOptions extends UploadOptions {
+interface S3UploadOptions extends UploadOptions {
 
 }
 
 class S3BucketAdapter extends BucketAdapter {
     private readonly _s3: S3;
 
-    constructor(args: IS3BucketAdapterConstructor) {
+    constructor(args: S3BucketAdapterConstructor) {
         super(args);
         this._s3 = args.s3;
     }
@@ -80,7 +80,7 @@ class S3BucketAdapter extends BucketAdapter {
         })
     }
 
-    async getBase64(name: string, options?: GetBase64Options): Promise<string> {
+    async getBase64(name: string, options: GetBase64Options): Promise<string> {
         // check that the file exists
         const exists = await this.exists(name);
         if (!exists) {
@@ -109,7 +109,7 @@ class S3BucketAdapter extends BucketAdapter {
             throw new Error(error.originalError);
         }
 
-        const signedURL = await this.getSignedURL(name, {expires: 604800});
+        const signedURL = await this.getSignedURL(name, {expires: options.expires});
 
         const response = await axios.get(signedURL, {responseType: "arraybuffer"});
         return `data:${headObject.ContentType};base64,`

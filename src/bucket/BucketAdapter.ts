@@ -9,7 +9,7 @@ interface CreateReadStreamOptions {
 }
 
 interface GetBase64Options {
-
+    expires: number;
 }
 
 interface GetSignedURLOptions {
@@ -25,7 +25,7 @@ abstract class BucketAdapter {
 
     private readonly _bucketName: string;
 
-    constructor(args: BucketAdapterConstructor) {
+    protected constructor(args: BucketAdapterConstructor) {
         this._bucketName = args.bucketName;
     }
 
@@ -37,7 +37,7 @@ abstract class BucketAdapter {
 
     public abstract exists(name: string): Promise<boolean>;
 
-    public abstract getBase64(name: string, options?: GetBase64Options): Promise<string>;
+    public abstract getBase64(name: string, options: GetBase64Options): Promise<string>;
 
     public abstract getSignedURL(name: string, options: GetSignedURLOptions): Promise<string>;
 

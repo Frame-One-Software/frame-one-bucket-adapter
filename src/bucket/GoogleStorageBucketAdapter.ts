@@ -1,7 +1,7 @@
 import {
 	BucketAdapter,
 	BucketAdapterConstructor,
-	CreateReadStreamOptions,
+	CreateReadStreamOptions, GetBase64Options,
 	GetSignedURLOptions,
 	UploadOptions
 } from "./BucketAdapter";
@@ -16,6 +16,10 @@ interface GoogleStorageBucketAdapterConstructor extends BucketAdapterConstructor
 
 interface GoogleStorageCreateReadStreamOptions extends CreateReadStreamOptions {
 	validation?: NativeCreateReadStreamOptions["validation"];
+}
+
+interface GoogleStorageGetBase64Options extends GetBase64Options {
+
 }
 
 interface GoogleStorageGetSignedURLOptions extends GetSignedURLOptions {
@@ -63,14 +67,14 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 		return exists;
 	}
 
-	async getBase64(name: string): Promise<string> {
+	async getBase64(name: string, options: GoogleStorageGetBase64Options): Promise<string> {
 		// find the file
 		const file = this._googleBucket.file(name);
 
 		// get the signed url
 		const [signedURL] = await file.getSignedUrl({
 			action: "read",
-			expires: 604800000,
+			expires: Date.now() + options.expires,
 			virtualHostedStyle: true
 		});
 
@@ -90,6 +94,7 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 			expires: Date.now() + options.expires,
 			virtualHostedStyle: options.virtualHostedStyle
 		});
+		
 		return signedURL;
 	}
 
