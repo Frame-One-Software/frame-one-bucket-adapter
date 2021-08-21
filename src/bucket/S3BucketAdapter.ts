@@ -125,6 +125,7 @@ class S3BucketAdapter extends BucketAdapter {
 
         // Expires option must be in seconds
         const Expires = Math.floor(options.expires / 1000);
+        console.log({Expires});
         const params = {
             Bucket: this.bucketName,
             Key: name,
