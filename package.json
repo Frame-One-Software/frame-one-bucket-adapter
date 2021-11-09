@@ -1,6 +1,6 @@
 {
   "name": "frame-one-bucket-adapter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An adapter for wrapping various storage buckets and unifying a select number of features.",
   "main": "dist/index.js",
   "scripts": {
