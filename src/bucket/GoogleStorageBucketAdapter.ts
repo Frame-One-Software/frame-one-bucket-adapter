@@ -90,6 +90,7 @@ class GoogleStorageBucketAdapter extends BucketAdapter {
 
 		// get the signed url
 		const [signedURL] = await file.getSignedUrl({
+			version: "v4",
 			action: options.action,
 			expires: Date.now() + options.expires,
 			virtualHostedStyle: options.virtualHostedStyle
